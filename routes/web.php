@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\IncomeController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\MonthlyReportController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -15,16 +16,12 @@ use App\Http\Controllers\ExpenseController;
 |
 */
 
-Route::get('/', function () {
-    return view('auth.login');
-});
-
 //auth routes
 Route::get('login', [AuthController::class, 'index'])->name('login');
 Route::post('post-login', [AuthController::class, 'postLogin'])->name('login.post'); 
 Route::get('register', [AuthController::class, 'register'])->name('register');
 Route::post('post-register', [AuthController::class, 'postRegister'])->name('register.post'); 
-Route::get('dashboard', [AuthController::class, 'dashboard']); 
+Route::get('/', [AuthController::class, 'dashboard']); 
 Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 
 
@@ -49,4 +46,6 @@ Route::delete('expense/{id}/delete' ,[ExpenseController::class,'delete'])->name(
 Route::put('expense/{id}' ,[ExpenseController::class,'update'])->name('expense.update');
 
 // monthly expenditure/saving routes
+Route::get('monthly/report' ,  [ MonthlyReportController::class, 'index'])->name('monthly.report');
+
 });

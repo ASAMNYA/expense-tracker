@@ -10,29 +10,55 @@ use App\Models\Expense;
 class ExpenseController extends Controller
 {
     public function index(){
-        return view('expense.index');
+        $expensedata=Expense::where('user_id',Auth::user()->id)->get();
+        return view('expense.index',compact('expensedata'));
     }
 
     public function create(){
         return view('expense.create');
     }
 
-    public function store()
+    public function store(Request $request)
     {
-        // store all
-        return redirect('expense.index');
+        $request->validate([
+            'date'=>'required|date',
+            'title'=>'required|min:3',
+            'amount'=>'required',
+        ]); 
+        $data =[
+            'title'=> $request->title,
+            'date'=> $request->date,
+            'amount'=> $request->amount,
+            'user_id'=> Auth::user()->id,
+            'remarks'=> $request->remarks,
+        ];
+        $model= Expense::create($data);
+        return redirect('expense')->withSuccess('Expense Stored Successful');
     }
 
-    public function edit(){
-        return view('expense.edit');
+    public function edit($id){
+        $expensedata = Expense::findorFail($id);
+        return view('expense.edit',compact('expensedata'));
     }
 
-    public function update(){
-        //update
-        return redirect('expense.index');
+    public function update(Request $request, $id){
+        
+        $postData=$request->validate([
+            'date'=>'required|date',
+            'title'=>'required|min:3',
+            'amount'=>'required'
+        ]); 
+    
+        $expensedata=Expense::find($id);
+        $expensedata->fill($postData);
+        $expensedata->save();
+        return redirect()->route('expense');
     }
 
-    public function delete(){
-        return redirect('expense.index');
+    public function delete($id){
+        $expensedata=Expense::find($id);
+        
+        $expensedata->delete();
+        return redirect()->route('expense');
     }
 }

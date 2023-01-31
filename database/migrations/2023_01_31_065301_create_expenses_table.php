@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('date');
             $table->string('amount')->nullable();
+            $table->foreignId('user_id')->constrained('users');
             $table->string('remarks');
             $table->timestamps();
         });
